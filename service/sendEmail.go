@@ -1,37 +1,28 @@
 package service
 
 import (
-	"bytes"
 	"fmt"
-	"myapp/template"
 	"net/smtp"
+	"os"
 )
 
 const CONFIG_SMTP_HOST = "smtp.gmail.com"
 const CONFIG_SMTP_PORT = 587
-const CONFIG_EMAIL = "senderemail@gmail.com" //Email MUST BE CONFIGURE LESS SECURE APP ACCESS TO TRUE
-const CONFIG_PASSWORD = "password"
+
+var CONFIG_EMAIL = os.Getenv("EMAIL_DUMMY") //Email MUST BE CONFIGURE LESS SECURE APP ACCESS TO TRUE
+var CONFIG_PASSWORD = os.Getenv("EMAIL_DUMMY_PASS")
 
 //SendMail Send Mail
-func SendMail(to []string, cc []string, subject, name string) error {
+func SendMail(to []string, subject string, htmlBody string) error {
 
 	auth := smtp.PlainAuth("", CONFIG_EMAIL, CONFIG_PASSWORD, CONFIG_SMTP_HOST)
 	smtpAddr := fmt.Sprintf("%s:%d", CONFIG_SMTP_HOST, CONFIG_SMTP_PORT)
 
-	var buffered bytes.Buffer
-
-	template.UserList(name, &buffered)
-
-	byteString := buffered.String()
-
-	// bufferByted := buffered.Bytes()
-
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	subjectSend := "Subject: " + subject + "\n"
-	msg := []byte(subjectSend + mime + byteString)
-	// msg := bufferByted
+	msg := []byte(subjectSend + mime + htmlBody)
 
-	err := smtp.SendMail(smtpAddr, auth, CONFIG_EMAIL, append(to, cc...), msg)
+	err := smtp.SendMail(smtpAddr, auth, CONFIG_EMAIL, to, msg)
 	if err != nil {
 		return err
 	}

@@ -1,0 +1,26 @@
+<%: func TestTemplate(name string, buffer *bytes.Buffer) %>
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title> Dummy </title>
+
+        <style>
+            a:hover {
+                opacity: 0.7;
+                transition: all 0.35s;
+            }
+            p {
+                font-size: 20px;
+                color: blue;
+            }
+        </style>
+    </head>
+
+    <body>
+        <a href="https://google.com"><img src="https://www.iconfinder.com/data/icons/social-icons-color/512/gmail-128.png" alt="Gmail Logo"></a>
+        <p>Thanks for using this SMTP Service : <%= name %></p>
+    </body>
+
+</html>

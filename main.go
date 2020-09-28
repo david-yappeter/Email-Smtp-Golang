@@ -1,18 +1,26 @@
 package main
 
 import (
+	"bytes"
 	"log"
 	"myapp/service"
+	"myapp/template"
+	"os"
 )
 
 func main() {
 
-	to := []string{"receiver@gmail.com"}
-	cc := []string{"cc@gmail.com"}
+	to := []string{os.Getenv("RECEIVER_EMAIL")}
+	// cc := []string{"cc@gmail.com"}
 	subject := "testing subject"
-	message := "Testing 1"
 
-	err := service.SendMail(to, cc, subject, message)
+	var buffer bytes.Buffer
+
+	template.TestTemplate("dummy message", &buffer)
+
+	message := buffer.String()
+
+	err := service.SendMail(to, subject, message)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
